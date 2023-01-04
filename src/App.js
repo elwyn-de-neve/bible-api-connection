@@ -26,6 +26,7 @@ function App() {
         void fetchData()
     }, [] )
 
+    console.log(data)
 
     return (
         <div>
