@@ -3,39 +3,53 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function App() {
+
+    // API variables
+    const API_KEY = ""
+
+    // State variables
     const [ data, setData ] = useState( [] )
-    const [ error, setError ] = useState( false )
     const [ loading, setLoading ] = useState( false )
+    const [ error, setError ] = useState( false )
 
-    async function fetchData() {
-        setError( false )
-        try {
-            setLoading( true )
-            const response = await axios.get( 'https://jsonplaceholder.typicode.com/users' )
-            setData( response.data )
-            console.log(data)
-        } catch ( e ) {
-            console.error( e )
-            setError( true )
-        } finally {
-            setLoading( false )
-        }
-    }
-
+    // Async function
     useEffect( () => {
+        async function fetchData() {
+            setError( false )
+            try {
+                setLoading( true )
+                const response = await axios.get( 'https://api.scripture.api.bible/v1/bibles', {
+                    // Header data (must have API Key)
+                    headers: {
+                        'api-key': API_KEY,
+                    },
+                    // Add all params here...
+                    params: {
+
+                    }
+                } )
+                console.log( response.data.data )
+                setData( response.data.data )
+            } catch ( e ) {
+                    console.error( e )
+                    setError( true )
+            } finally {
+                setLoading( false )
+            }
+        }
+
+        // Invoke function
         void fetchData()
     }, [] )
-
-    console.log(data)
 
     return (
         <div>
             { error && <p>Er is iets mis gegaan</p> }
             { loading && <p>Loading...</p> }
-            { data.map( ( user ) => {
+            { data.map( ( bible ) => {
                 return (
-                    <p key={ user.id }>
-                        { user.name }
+                    <p key={ bible.id }>
+                        { bible.name }
                     </p>
                 )
             } ) }
